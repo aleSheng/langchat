@@ -74,7 +74,11 @@ async def knowledge_base_chat(query: str = Body(..., description="用户输入",
             filename = os.path.split(doc.metadata["source"])[-1]
             parameters = urlencode({"knowledge_base_name": knowledge_base_name, "file_name":filename})
             url = f"/knowledge_base/download_doc?" + parameters
-            text = f"""出处 [{inum + 1}] [{filename}]({url}) \n\n{doc.page_content}\n\n"""
+            # text = f"""出处 [{inum + 1}] [{filename}]({url}) \n\n{doc.page_content}\n\n"""
+            if r'\u' in doc.page_content:  
+                text = f"""出处 [{inum + 1}] [{filename}]({url}) \n\n{bytes(doc.page_content,'utf-8').decode('unicode_escape')}\n\n"""  
+            else:  
+                text = f"""出处 [{inum + 1}] [{filename}]({url}) \n\n{doc.page_content}\n\n"""  
             source_documents.append(text)
         if stream:
             async for token in callback.aiter():
