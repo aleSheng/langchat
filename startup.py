@@ -453,6 +453,7 @@ def run_webui(started_event: mp.Event = None):
                           "--theme.primaryColor", "#165dff",
                           "--theme.secondaryBackgroundColor", "#f5f5f5",
                           "--theme.textColor", "#000000",
+                          "--browser.gatherUsageStats", "False"
                         ])
     started_event.set()
     p.wait()

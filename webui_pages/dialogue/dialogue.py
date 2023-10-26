@@ -53,11 +53,11 @@ def get_default_llm_model(api: ApiRequest) -> (str, bool):
 
 def dialogue_page(api: ApiRequest):
     if not chat_box.chat_inited:
-        default_model = get_default_llm_model(api)[0]
-        st.toast(
-            f"欢迎使用 [`Langchain-Chatchat`](https://github.com/chatchat-space/Langchain-Chatchat) ! \n\n"
-            f"当前运行的模型`{default_model}`, 您可以开始提问了."
-        )
+        # default_model = get_default_llm_model(api)[0]
+        # st.toast(
+        #     f"欢迎使用 [`Langchain-Chatchat`](https://github.com/chatchat-space/Langchain-Chatchat) ! \n\n"
+        #     f"当前运行的模型`{default_model}`, 您可以开始提问了."
+        # )
         chat_box.init_session()
     with st.sidebar:
         # TODO: 对话模型与会话绑定
@@ -76,7 +76,7 @@ def dialogue_page(api: ApiRequest):
                                       "搜索引擎问答",
                                       "自定义Agent问答",
                                       ],
-                                     index=0,
+                                     index=1,
                                      on_change=on_mode_change,
                                      key="dialogue_mode",
                                      )
