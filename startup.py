@@ -104,7 +104,7 @@ def create_model_worker_app(log_level: str = "INFO", **kwargs) -> FastAPI:
         from configs.model_config import VLLM_MODEL_DICT
         if kwargs["model_names"][0] in VLLM_MODEL_DICT and args.infer_turbo == "vllm":
             import fastchat.serve.vllm_worker
-            from fastchat.serve.vllm_worker import VLLMWorker, app
+            from fastchat.serve.vllm_worker import VLLMWorker, app, worker_id
             from vllm import AsyncLLMEngine
             from vllm.engine.arg_utils import AsyncEngineArgs,EngineArgs
 
@@ -136,6 +136,7 @@ def create_model_worker_app(log_level: str = "INFO", **kwargs) -> FastAPI:
             args.revision = None
             args.quantization = None
             args.max_log_len = None
+            args.max_paddings = None
             args.tokenizer_revision = None
 
             if args.model_path:
@@ -445,20 +446,15 @@ def run_webui(started_event: mp.Event = None, run_mode: str = None):
     host = WEBUI_SERVER["host"]
     port = WEBUI_SERVER["port"]
 
-    cmd = ["streamlit", "run", "webui.py",
-            "--server.address", host,
-            "--server.port", str(port),
-            "--theme.base", "light",
-            "--theme.primaryColor", "#165dff",
-            "--theme.secondaryBackgroundColor", "#f5f5f5",
-            "--theme.textColor", "#000000",
-        ]
-    if run_mode == "lite":
-        cmd += [
-            "--",
-            "lite",
-        ]
-    p = subprocess.Popen(cmd)
+    p = subprocess.Popen(["streamlit", "run", "webui.py",
+                          "--server.address", host,
+                          "--server.port", str(port),
+                          "--theme.base", "light",
+                          "--theme.primaryColor", "#165dff",
+                          "--theme.secondaryBackgroundColor", "#f5f5f5",
+                          "--theme.textColor", "#000000",
+                          "--browser.gatherUsageStats", "False"
+                        ])
     started_event.set()
     p.wait()
 

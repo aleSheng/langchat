@@ -78,9 +78,12 @@ async def knowledge_base_chat(query: str = Body(..., description="用户输入",
         for inum, doc in enumerate(docs):
             filename = Path(doc.metadata["source"]).resolve().relative_to(doc_path)
             parameters = urlencode({"knowledge_base_name": knowledge_base_name, "file_name":filename})
-            base_url = request.base_url
-            url = f"{base_url}knowledge_base/download_doc?" + parameters
-            text = f"""出处 [{inum + 1}] [{filename}]({url}) \n\n{doc.page_content}\n\n"""
+            url = f"/knowledge_base/download_doc?" + parameters
+            # text = f"""出处 [{inum + 1}] [{filename}]({url}) \n\n{doc.page_content}\n\n"""
+            if r'\u' in doc.page_content:  
+                text = f"""出处 [{inum + 1}] [{filename}]({url}) \n\n{bytes(doc.page_content,'utf-8').decode('unicode_escape')}\n\n"""  
+            else:  
+                text = f"""出处 [{inum + 1}] [{filename}]({url}) \n\n{doc.page_content}\n\n"""  
             source_documents.append(text)
 
         if len(source_documents) == 0: # 没有找到相关文档

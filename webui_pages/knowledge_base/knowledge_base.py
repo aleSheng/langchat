@@ -259,52 +259,52 @@ def knowledge_base_page(api: ApiRequest, is_lite: bool = None):
                 st.rerun()
 
             # 将文件从向量库中删除，但不删除文件本身。
-            if cols[2].button(
-                    "从向量库删除",
-                    disabled=not (selected_rows and selected_rows[0]["in_db"]),
-                    use_container_width=True,
-            ):
-                file_names = [row["file_name"] for row in selected_rows]
-                api.delete_kb_docs(kb, file_names=file_names)
-                st.rerun()
+            # if cols[2].button(
+            #         "从向量库删除",
+            #         disabled=not (selected_rows and selected_rows[0]["in_db"]),
+            #         use_container_width=True,
+            # ):
+            #     file_names = [row["file_name"] for row in selected_rows]
+            #     api.delete_kb_docs(kb, file_names=file_names)
+            #     st.experimental_rerun()
 
-            if cols[3].button(
-                    "从知识库中删除",
-                    type="primary",
-                    use_container_width=True,
-            ):
-                file_names = [row["file_name"] for row in selected_rows]
-                api.delete_kb_docs(kb, file_names=file_names, delete_content=True)
-                st.rerun()
+            # if cols[3].button(
+            #         "从知识库中删除",
+            #         type="primary",
+            #         use_container_width=True,
+            # ):
+            #     file_names = [row["file_name"] for row in selected_rows]
+            #     api.delete_kb_docs(kb, file_names=file_names, delete_content=True)
+            #     st.experimental_rerun()
 
         st.divider()
 
         cols = st.columns(3)
 
-        if cols[0].button(
-                "依据源文件重建向量库",
-                # help="无需上传文件，通过其它方式将文档拷贝到对应知识库content目录下，点击本按钮即可重建知识库。",
-                use_container_width=True,
-                type="primary",
-        ):
-            with st.spinner("向量库重构中，请耐心等待，勿刷新或关闭页面。"):
-                empty = st.empty()
-                empty.progress(0.0, "")
-                for d in api.recreate_vector_store(kb,
-                                                chunk_size=chunk_size,
-                                                chunk_overlap=chunk_overlap,
-                                                zh_title_enhance=zh_title_enhance):
-                    if msg := check_error_msg(d):
-                        st.toast(msg)
-                    else:
-                        empty.progress(d["finished"] / d["total"], d["msg"])
-                st.rerun()
+        # if cols[0].button(
+        #         "依据源文件重建向量库",
+        #         # help="无需上传文件，通过其它方式将文档拷贝到对应知识库content目录下，点击本按钮即可重建知识库。",
+        #         use_container_width=True,
+        #         type="primary",
+        # ):
+        #     with st.spinner("向量库重构中，请耐心等待，勿刷新或关闭页面。"):
+        #         empty = st.empty()
+        #         empty.progress(0.0, "")
+        #         for d in api.recreate_vector_store(kb,
+        #                                         chunk_size=chunk_size,
+        #                                         chunk_overlap=chunk_overlap,
+        #                                         zh_title_enhance=zh_title_enhance):
+        #             if msg := check_error_msg(d):
+        #                 st.toast(msg)
+        #             else:
+        #                 empty.progress(d["finished"] / d["total"], d["msg"])
+        #         st.experimental_rerun()
 
-        if cols[2].button(
-                "删除知识库",
-                use_container_width=True,
-        ):
-            ret = api.delete_knowledge_base(kb)
-            st.toast(ret.get("msg", " "))
-            time.sleep(1)
-            st.rerun()
+        # if cols[2].button(
+        #         "删除知识库",
+        #         use_container_width=True,
+        # ):
+        #     ret = api.delete_knowledge_base(kb)
+        #     st.toast(ret.get("msg", " "))
+        #     time.sleep(1)
+        #     st.experimental_rerun()
