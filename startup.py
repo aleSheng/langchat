@@ -138,7 +138,9 @@ def create_model_worker_app(log_level: str = "INFO", **kwargs) -> FastAPI:
             args.max_log_len = None
             args.max_paddings = None
             args.tokenizer_revision = None
-
+            # 0.2.2 vllm需要新加的参数
+            args.max_paddings = 256
+            
             if args.model_path:
                 args.model = args.model_path
             if args.num_gpus > 1:
@@ -162,7 +164,7 @@ def create_model_worker_app(log_level: str = "INFO", **kwargs) -> FastAPI:
                         conv_template = args.conv_template,
                         )
             sys.modules["fastchat.serve.vllm_worker"].engine = engine
-            # sys.modules["fastchat.serve.vllm_worker"].worker = worker
+            sys.modules["fastchat.serve.vllm_worker"].worker = worker
             sys.modules["fastchat.serve.vllm_worker"].logger.setLevel(log_level)
 
         else:
